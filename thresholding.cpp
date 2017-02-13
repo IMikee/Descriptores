@@ -1,11 +1,11 @@
 
 //Compilar:
-#include <iostream>
 // g++ -O2 thresholding.cpp -o test `pkg-config --cflags opencv` `pkg-config --libs opencv`
 
 //ejercutar:
 // ./test rutaDeLaImagen
 
+#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -42,12 +42,13 @@ int main(int argc, char const *argv[])
     std::cerr << "No se puede cargar la imagen" << std::endl;
   }
 
+
   //muestra la imagen
   cv::namedWindow("Imagen de Entrada",CV_WINDOW_AUTOSIZE);
   cv::imshow("Imagen de Entrada",image);
 
-  image = binarizeAt(image);
-  //image = binarizeP(image);
+  //image = binarizeAt(image);
+  image = binarizeP(image);
 
   //muestra la imagen binarizada
   cv::namedWindow("Imagen de Salida", CV_WINDOW_AUTOSIZE);
@@ -62,9 +63,10 @@ int main(int argc, char const *argv[])
 //recorre la imagen con at
 cv::Mat binarizeAt(cv::Mat image)
 {
+  //recorre imagen
   for (int i = 0; i < image.rows; i++)
     for (int j = 0; j < image.cols; j++)
-      image.at<uchar>(i,j) = image.at<uchar>(i,j) < threshold ? 0:255;
+      image.at<uchar>(i,j) = image.at<uchar>(i,j) < threshold ? 0:255; //umbralizacion
 
   return image;
 }
@@ -72,7 +74,13 @@ cv::Mat binarizeAt(cv::Mat image)
 //Recorre la imagen con apuntadores
 cv::Mat binarizeP(cv::Mat image)
 {
-
+  //recorre la imagen
+  for (int i = 0; i < image.rows; i++)
+  {
+    uchar* ptrRow = image.ptr(i); //aputandor a la fila
+    for (int j = 0; j < image.cols; j++)
+      ptrRow[j] = ptrRow[j] < threshold ? 0:255; //umbralizacion
+  }
 
   return image;
 }
